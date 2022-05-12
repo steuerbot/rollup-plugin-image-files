@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { basename, dirname } from 'path';
+import fs, { existsSync, mkdirSync } from 'fs';
+import path, { basename, dirname } from 'path';
 import { createFilter } from 'rollup-pluginutils';
 
 const defaultExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.svg'];
@@ -17,17 +17,18 @@ function image(options = {}) {
 			mkdirSync(dir);
 		}
 		images.forEach(id => {
-			const base = basename(id);
-			writeFileSync(`${dir}/${base}`, readFileSync(id));
+			const base = path.basename(id);
+			fs.writeFileSync(`${dir}/${base}`, fs.readFileSync(id));
 			const parts = id.split('.');
 			const extension = parts.pop();
-			const idx2 = `${parts.join('.')}@2.${extension}`;
-			const idx3 = `${parts.join('.')}@3.${extension}`;
-			if (existsSync(idx2)) {
-				writeFileSync(`${dir}/${base}@2`, readFileSync(idx2));
+			const idx2 = `${parts.join('.')}@2x.${extension}`;
+			const idx3 = `${parts.join('.')}@3x.${extension}`;
+			const baseName = base.split('.').slice(0, -1).join('.');
+			if (fs.existsSync(idx2)) {
+				fs.writeFileSync(`${dir}/${baseName}@2x.${extension}`, fs.readFileSync(idx2));
 			}
-			if (existsSync(idx3)) {
-				writeFileSync(`${dir}/${base}@3`, readFileSync(idx3));
+			if (fs.existsSync(idx3)) {
+				fs.writeFileSync(`${dir}/${baseName}@3x.${extension}`, fs.readFileSync(idx3));
 			}
 		});
 	}
