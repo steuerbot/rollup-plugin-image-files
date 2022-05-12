@@ -4,7 +4,7 @@ import { createFilter } from 'rollup-pluginutils';
 
 const defaultExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.svg'];
 
-export default function image(options = {}) {
+function image(options = {}) {
 	const extensions = options.extensions || defaultExtensions;
 	const includes = extensions.map(e => `**/*${e}`);
 	const filter = createFilter(options.include || includes, options.exclude);
@@ -48,3 +48,5 @@ export default function image(options = {}) {
 		ongenerate: generateBundle
 	};
 }
+
+export default image;
